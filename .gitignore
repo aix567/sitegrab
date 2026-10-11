@@ -1,0 +1,29 @@
+# build output
+bin/
+obj/
+publish/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# python
+__pycache__/
+*.pyc
+sitegrab/__pycache__/
+
+# grabbed output
+grabbed/
+**/grabbed/
+
+# logs
+*.log
+
+# settings
+sitegrabber.settings.json
+
+# os
+Thumbs.db
+.DS_Store
