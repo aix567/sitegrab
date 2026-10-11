@@ -73,7 +73,6 @@ MIT — see [LICENSE](LICENSE).
 ---
 
 <img width="718" height="619" alt="saved files" src="https://github.com/user-attachments/assets/240ee1cc-df1b-4c6f-b609-93874429aa96" />
-<img width="978" height="508" alt="grabber finished" src="https://github.com/user-attachments/assets/9f2e0c68-64d1-4457-b627-235403e47abe" />
-<img width="974" height="508" alt="screenshot prove 1" src="https://github.com/user-attachments/assets/5e2744d5-0519-4f95-b136-df8c642d9a67" />
+
 
 
