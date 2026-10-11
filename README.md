@@ -70,9 +70,7 @@ Output mirrors the site's path structure under `grabbed/<hostname>/`.
 
 MIT — see [LICENSE](LICENSE).
 
----
 
-<img width="718" height="619" alt="saved files" src="https://github.com/user-attachments/assets/240ee1cc-df1b-4c6f-b609-93874429aa96" />
 
 
 
