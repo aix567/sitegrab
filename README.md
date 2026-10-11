@@ -1,4 +1,4 @@
-# SiteGrabber
+# SiteGrab
 
 Mirrors websites to disk. Follows links, parses sitemaps, handles search/product/pricing pages. Three implementations — C++ console tool, C# WinForms GUI, Python script.
 
