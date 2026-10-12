@@ -71,6 +71,6 @@ Output mirrors the site's path structure under `grabbed/<hostname>/`.
 MIT — see [LICENSE](LICENSE).
 
 
-
+![SiteGrab Demo](https://github.com/aix567/sitegrab/releases/download/v3.0.0/screenshot.png)
 
 
