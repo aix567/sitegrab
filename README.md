@@ -56,6 +56,14 @@ Output mirrors the site's path structure under `grabbed/<hostname>/`.
 
 ---
 
+## Video Demo for the Software
+
+https://drive.google.com/file/d/1lKhbPEy_X0XUM9RYEJ-a-5gMiQXmK4Wc/view?usp=sharing
+
+
+
+
+
 ## Building from source
 
 | Target | Toolchain |
@@ -70,7 +78,5 @@ Output mirrors the site's path structure under `grabbed/<hostname>/`.
 
 MIT — see [LICENSE](LICENSE).
 
-
-![SiteGrab Demo](https://github.com/aix567/sitegrab/releases/download/v3.0.0/screenshot.png)
 
 
