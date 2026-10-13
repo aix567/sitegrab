@@ -61,7 +61,11 @@ Output mirrors the site's path structure under `grabbed/<hostname>/`.
 
 https://drive.google.com/file/d/1xTUM0qdtHqRuOjS1vssY-BxhNzplRssS/view?usp=drive_link
 
+<img width="1298" height="777" alt="image" src="https://github.com/user-attachments/assets/ed93b56d-8ebd-4069-a3b1-f126b069a856" />
 
+<img width="1302" height="779" alt="image" src="https://github.com/user-attachments/assets/6517e15e-bb34-4e0b-8d1b-9d8e09d2a85f" />
+
+<img width="1299" height="779" alt="image" src="https://github.com/user-attachments/assets/1ea8fb7a-b050-4882-a390-7644e71f2fd8" />
 
 
 
