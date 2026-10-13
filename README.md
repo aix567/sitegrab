@@ -1,61 +1,116 @@
-# SiteGrab
+# SiteGrabber
 
-Mirrors websites to disk. Follows links, parses sitemaps, handles search/product/pricing pages. Three implementations — C++ console tool, C# WinForms GUI, Python script.
+**Full-site mirror + exposed-data hunter + recon suite.**
 
-Newest Version v3.0.0 is now available
----
-
-## C++ (Windows, no dependencies)
-
-Builds against `winhttp.lib` which ships with Windows — no vcpkg, no NuGet.
-
-```cmd
-cd CPP
-build.bat
-```
-
-Requires the **x64 Native Tools Command Prompt** for VS 2022 (not a regular terminal).
-
-```cmd
-sitegrab.exe https://example.com
-sitegrab.exe https://example.com output_dir 4 16
-                                             ^   ^
-                                          depth  threads
-```
+Crawl any website, save it offline, scan it for leaked credentials, and inspect
+every request it made — from one Windows app.
 
 ---
 
-## C# GUI (Windows)
+## Download
 
-```cmd
-cd CSharp_GUI
-dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
-```
+**SiteGrabber v3** (WPF dashboard, the current release) —
+[⬇ Download for Windows](https://github.com/aix567/sitegrab/releases/latest)
 
-Produces a single portable `.exe` in `bin\Release\net8.0-windows\win-x64\publish\`.  
-Requires [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+Single-file exe. Self-contained. No .NET runtime install required. Windows 10/11 x64.
 
----
+Older versions:
 
-## Python (cross-platform)
-
-```bash
-pip install requests beautifulsoup4
-python sitegrab.py https://example.com -o output_dir -d 4 -t 16
-```
+- **v3** — WinForms tabbed UI + C++ + Python engines → [`sitegrab/`](sitegrab/)
+- **v4 source** — the WPF project → [`sitegrabber-v4/`](sitegrabber-v4/)
 
 ---
 
-## What it grabs
+## What it does
 
-- All reachable pages via `<a href>` up to the configured depth
-- Every asset referenced in HTML and CSS (`<img>`, `<script>`, `<link>`, fonts, backgrounds)
-- Sitemap URLs (`/sitemap.xml`, `/sitemap_index.xml`)
-- Query-string variants — product filters, search results, pagination (`?page=N` auto-expanded)
+### 1. Mirror
 
-Output mirrors the site's path structure under `grabbed/<hostname>/`.
+Recursive same-domain crawl. Saves HTML, CSS, JS, images, fonts, video, audio,
+documents. Follows `<a href>`, `<form action>`, sitemaps. Handles lazy-loaded
+images (`data-src`, `srcset`). Skips duplicates. Keeps query strings as
+distinct pages.
+
+### 2. Link rewriting
+
+A second pass rewrites every absolute URL in the mirrored HTML and CSS to a
+relative local path. **Open the mirror folder in a browser, disconnect Wi-Fi,
+and it still works.** CSS resolves, links navigate locally, images load.
+
+### 3. Pagination exhaustion
+
+Detects `?page=N`, `?p=N`, `?offset=N`, `?start=N`, `?skip=N`, `?from=N`,
+`?pageno=N`, `?page_num=N` on any crawled link. Walks each key up to **500
+pages**. Search backends and product catalogs get walked to exhaustion.
+
+### 4. Sitemaps
+
+Parses `/sitemap.xml`, `/sitemap_index.xml`, `/sitemap.txt`,
+`/sitemap-products.xml`, `/product-sitemap.xml`. Seeds the crawl queue from
+them.
+
+### 5. Product extraction
+
+Reads JSON-LD and OpenGraph product records from every crawled page. Writes
+`_products.ndjson` — one JSON object per line, one per product.
+
+### 6. Exposed-data hunter
+
+Scans every mirrored HTML/CSS/JS file for:
+
+| Rule | Severity | Detects |
+|---|---|---|
+| `aws_access_key` | critical | `AKIA...` |
+| `aws_secret` | critical | `aws_secret_access_key` |
+| `stripe_live_secret` | critical | `sk_live_...` |
+| `github_token` | critical | `ghp_`, `gho_`, `ghs_`, `ghr_` |
+| `private_key` | critical | PEM private key header |
+| `env_file` | critical | Multi-line `KEY=VALUE` blocks |
+| `git_exposure` | critical | `.git/HEAD`, `.git/config` reachable |
+| `google_api_key` | high | `AIza...` |
+| `slack_token` | high | `xox[baprs]-` |
+| `jwt` | high | three-part JWT |
+| `firebase_config` | high | apiKey + authDomain pair |
+| `phpmyadmin` | high | `/phpmyadmin`, `/adminer` |
+| `debug_endpoint` | high | `/debug`, `/actuator`, `/server-status` |
+| `s3_reference` | medium | `s3://`, `*.amazonaws.com` |
+| `graphql_endpoint` | medium | `/graphql` paths |
+| `wp_login` | medium | `/wp-login.php`, `/wp-admin` |
+| `admin_panel` | medium | `/admin`, `/cpanel`, `/webmin` |
+| `stack_trace` | medium | Framework stack traces |
+| `source_map` | low | `sourceMappingURL=*.map` |
+| `email_address` | low | Emails on the page |
+| `internal_ip` | low | `10.x`, `172.16-31.x`, `192.168.x` |
+
+Results written to `_findings.ndjson`. **Every secret is redacted in the
+output** — the first 6 and last 6 characters only, with the length noted.
+
+### 7. HTTP History
+
+Every request the crawler makes is logged with full headers, timing, status,
+and body. Searchable, filterable, clickable.
+
+### 8. Request Repeater
+
+Double-click any request in History → edit method, URL, headers, body → send
+→ response appears beside it. Results feed back into History.
+
+### 9. Subdomain enumeration
+
+DNS-only scan against a wordlist. Live hosts appear as they resolve. Optional
+batch replay of 12 common paths against every found subdomain.
+
+### 10. CSV export
+
+History and subdomain results export to CSV for offline analysis.
+
+### 11. Resume-safe
+
+Writes crawl state after every batch. Kill the process mid-crawl, relaunch, it
+picks up where it left off.
 
 ---
+
+
 
 ## Video Demo for the Software v4.0.0
 
@@ -78,6 +133,17 @@ https://drive.google.com/file/d/1xTUM0qdtHqRuOjS1vssY-BxhNzplRssS/view?usp=drive
 | Python | Python 3.10+, `requests`, `beautifulsoup4` |
 
 ---
+## Build from source
+
+### v3 — WPF dashboard (recommended)
+
+**Requirements:** .NET 8.0 SDK, Windows 10/11.
+
+```powershell
+cd sitegrabber-v4
+dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
+
+```
 
 ## License
 
