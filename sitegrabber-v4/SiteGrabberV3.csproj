@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>SiteGrabber</AssemblyName>
+    <RootNamespace>SiteGrabberV3</RootNamespace>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\logo.png" />
+    <Resource Include="Assets\logo.ico" />
+  </ItemGroup>
+
+  <!-- Ship the optional native accelerators if they were built locally; the app
+       runs fully without them (C# fallbacks), this just makes them available. -->
+  <ItemGroup>
+    <None Include="sitegrab.exe" Condition="Exists('sitegrab.exe')"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Rust\subdomain_enum\target\release\subdomain_enum.exe"
+          Condition="Exists('Rust\subdomain_enum\target\release\subdomain_enum.exe')"
+          CopyToOutputDirectory="PreserveNewest"
+          Link="Rust\subdomain_enum\target\release\subdomain_enum.exe" />
+  </ItemGroup>
+</Project>
