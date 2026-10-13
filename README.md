@@ -2,6 +2,7 @@
 
 Mirrors websites to disk. Follows links, parses sitemaps, handles search/product/pricing pages. Three implementations — C++ console tool, C# WinForms GUI, Python script.
 
+Newest Version v4.0.0 is now available
 ---
 
 ## C++ (Windows, no dependencies)
@@ -58,7 +59,7 @@ Output mirrors the site's path structure under `grabbed/<hostname>/`.
 
 ## Video Demo for the Software
 
-https://drive.google.com/file/d/1lKhbPEy_X0XUM9RYEJ-a-5gMiQXmK4Wc/view?usp=sharing
+https://drive.google.com/file/d/1xTUM0qdtHqRuOjS1vssY-BxhNzplRssS/view?usp=drive_link
 
 
 
