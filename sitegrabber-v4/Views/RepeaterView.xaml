@@ -1,0 +1,125 @@
+<UserControl x:Class="SiteGrabberV3.Views.RepeaterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <Grid Margin="24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- title -->
+            <RowDefinition Height="*"/>      <!-- request | response -->
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="Request Repeater" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="Edit a raw request and replay it" Style="{StaticResource PageSubtitle}"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="260"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*" MinWidth="260"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Request editor -->
+            <Border Grid.Column="0" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="REQUEST" Style="{StaticResource CardTitle}"
+                               Margin="0,0,0,12"/>
+
+                    <!-- Method + URL -->
+                    <Grid Grid.Row="1" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" x:Name="CmbMethod"
+                                  Style="{StaticResource DarkComboBox}">
+                            <ComboBoxItem Content="GET" IsSelected="True"/>
+                            <ComboBoxItem Content="POST"/>
+                            <ComboBoxItem Content="PUT"/>
+                            <ComboBoxItem Content="DELETE"/>
+                            <ComboBoxItem Content="PATCH"/>
+                            <ComboBoxItem Content="OPTIONS"/>
+                        </ComboBox>
+                        <TextBox Grid.Column="2" x:Name="TxtUrl"
+                                 Style="{StaticResource DarkTextBox}"
+                                 Height="36" VerticalContentAlignment="Center"
+                                 Text="https://example.com/api/endpoint"/>
+                    </Grid>
+
+                    <!-- Headers + body editor -->
+                    <TextBox Grid.Row="2" x:Name="TxtRawRequest"
+                             Style="{StaticResource DarkTextBox}"
+                             FontFamily="Consolas" FontSize="11"
+                             AcceptsReturn="True" AcceptsTab="True"
+                             TextWrapping="NoWrap"
+                             VerticalAlignment="Stretch"
+                             VerticalContentAlignment="Top"
+                             VerticalScrollBarVisibility="Auto"
+                             HorizontalScrollBarVisibility="Auto"
+                             Text="User-Agent: SiteGrabber/3.0&#x0D;&#x0A;Accept: */*&#x0D;&#x0A;&#x0D;&#x0A;"/>
+
+                    <Button Grid.Row="3" Content="▶  Send Request"
+                            Style="{StaticResource BtnAccent}"
+                            Margin="0,14,0,0" HorizontalAlignment="Left"
+                            Height="38" Padding="22,0" FontSize="13"
+                            Click="BtnSend_Click"/>
+                </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="1" Style="{StaticResource SlimSplitter}"
+                          HorizontalAlignment="Stretch"/>
+
+            <!-- Response viewer -->
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="RESPONSE" Style="{StaticResource CardTitle}"
+                               Margin="0,0,0,12"/>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+                        <Border Background="#33000000" CornerRadius="9" Padding="10,3">
+                            <TextBlock x:Name="LblStatus" Text="—"
+                                       FontSize="12" FontWeight="Bold"
+                                       Foreground="{StaticResource BrAccent}"/>
+                        </Border>
+                        <Border Background="#33000000" CornerRadius="9"
+                                Padding="10,3" Margin="8,0,0,0">
+                            <TextBlock x:Name="LblTime" Text="—ms"
+                                       FontSize="12" Foreground="{StaticResource BrMuted}"/>
+                        </Border>
+                        <Border Background="#33000000" CornerRadius="9"
+                                Padding="10,3" Margin="8,0,0,0">
+                            <TextBlock x:Name="LblSize" Text="—"
+                                       FontSize="12" Foreground="{StaticResource BrMuted}"/>
+                        </Border>
+                    </StackPanel>
+
+                    <Border Grid.Row="2" Style="{StaticResource Inset}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="TxtResponse"
+                                       FontFamily="Consolas" FontSize="11"
+                                       Foreground="#CBD5E1"
+                                       TextWrapping="NoWrap"
+                                       Text="Send a request to see the response…"/>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,168 @@
+<UserControl x:Class="SiteGrabberV3.Views.ResultsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <Grid Margin="24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- title + export -->
+            <RowDefinition Height="Auto"/>   <!-- filter tabs -->
+            <RowDefinition Height="*"/>      <!-- table + detail -->
+        </Grid.RowDefinitions>
+
+        <!-- ── Page header ───────────────────────────────────────────── -->
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <StackPanel>
+                    <TextBlock Text="Findings" Style="{StaticResource PageTitle}"/>
+                    <TextBlock x:Name="LblSummary" Text="Run a crawl to collect findings"
+                               Style="{StaticResource PageSubtitle}"/>
+                </StackPanel>
+                <!-- Red = something critical/high was found. Green (blinking) = nothing critical. -->
+                <ContentControl x:Name="BadgeCount" Style="{StaticResource StatusBadge}"
+                                Content="0" Tag="ok" Margin="14,0,0,0"
+                                ToolTip="No critical findings"/>
+            </StackPanel>
+
+            <Button Grid.Column="2" Content="⬇  Export CSV" Style="{StaticResource BtnGhost}"
+                    VerticalAlignment="Center" Click="BtnExport_Click"/>
+        </Grid>
+
+        <!-- ── Severity filter tabs ──────────────────────────────────── -->
+        <Border Grid.Row="1" Margin="0,0,0,12" Padding="0,0,0,2"
+                BorderBrush="#14FFFFFF" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="FilterAll" Content="All" IsChecked="True"
+                             Style="{StaticResource TabBtn}" Margin="0,0,4,0"
+                             Checked="Filter_Checked" Tag="All"/>
+                <RadioButton Content="Critical" Style="{StaticResource TabBtn}" Margin="0,0,4,0"
+                             Checked="Filter_Checked" Tag="Critical"/>
+                <RadioButton Content="High" Style="{StaticResource TabBtn}" Margin="0,0,4,0"
+                             Checked="Filter_Checked" Tag="High"/>
+                <RadioButton Content="Medium" Style="{StaticResource TabBtn}" Margin="0,0,4,0"
+                             Checked="Filter_Checked" Tag="Medium"/>
+                <RadioButton Content="Low" Style="{StaticResource TabBtn}" Margin="0,0,4,0"
+                             Checked="Filter_Checked" Tag="Low"/>
+                <RadioButton Content="Info" Style="{StaticResource TabBtn}"
+                             Checked="Filter_Checked" Tag="Info"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ── Table + detail ────────────────────────────────────────── -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="260"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="340" MinWidth="240"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Findings table -->
+            <Border Grid.Column="0" Style="{StaticResource Card}" Padding="6,6,6,8">
+                <Grid>
+                    <DataGrid x:Name="GridFindings"
+                              Style="{StaticResource DarkGrid}"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              IsReadOnly="True"
+                              SelectionChanged="GridFindings_SelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Severity" Width="96">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="9" Padding="9,2"
+                                                HorizontalAlignment="Left"
+                                                Background="{Binding Severity,
+                                                  Converter={StaticResource SevToColor}}">
+                                            <TextBlock Text="{Binding SeverityLabel}"
+                                                       FontSize="10" FontWeight="Bold"
+                                                       Foreground="White"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Category" Binding="{Binding CategoryLabel}" Width="150"/>
+                            <DataGridTextColumn Header="Target"   Binding="{Binding Target}"        Width="*"/>
+                            <DataGridTextColumn Header="Status"   Binding="{Binding Status}"        Width="90"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Empty state -->
+                    <StackPanel x:Name="EmptyHint" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                IsHitTestVisible="False" Margin="0,40,0,0">
+                        <TextBlock Text="🔍" FontSize="30" HorizontalAlignment="Center" Opacity="0.5"/>
+                        <TextBlock x:Name="EmptyText" Text="No findings yet"
+                                   Style="{StaticResource TextMuted}" Margin="0,8,0,0"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="1" Style="{StaticResource SlimSplitter}"
+                          HorizontalAlignment="Stretch"/>
+
+            <!-- Detail panel -->
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="FINDING DETAIL" Style="{StaticResource CardTitle}"
+                               Margin="0,0,0,14"/>
+
+                    <StackPanel Grid.Row="1" Margin="0,0,0,12">
+                        <TextBlock Text="TARGET" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="#64748B" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="DetailTarget" FontSize="12"
+                                   Foreground="{StaticResource BrText}"
+                                   TextWrapping="Wrap" Text="—"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Margin="0,0,0,14">
+                        <TextBlock Text="LOCATION" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="#64748B" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="DetailLocation" FontSize="11"
+                                   Foreground="{StaticResource BrAccent}"
+                                   TextWrapping="Wrap" Text="—"/>
+                    </StackPanel>
+
+                    <Border Grid.Row="3" Style="{StaticResource Inset}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="DetailProof"
+                                       FontFamily="Consolas" FontSize="11"
+                                       Foreground="#CBD5E1"
+                                       TextWrapping="Wrap"
+                                       Text="Select a finding to see proof…"/>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Grid Grid.Row="4" Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" x:Name="CmbStatus" Style="{StaticResource DarkComboBox}">
+                            <ComboBoxItem Content="New" IsSelected="True"/>
+                            <ComboBoxItem Content="Confirmed"/>
+                            <ComboBoxItem Content="False Positive"/>
+                            <ComboBoxItem Content="Wont Fix"/>
+                        </ComboBox>
+                        <Button Grid.Column="2" Content="Update" Style="{StaticResource BtnAccent}"
+                                Height="36" Padding="18,0" FontSize="13"
+                                Click="BtnUpdateStatus_Click"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

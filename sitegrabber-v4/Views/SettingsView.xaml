@@ -1,0 +1,184 @@
+<UserControl x:Class="SiteGrabberV3.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <Grid Margin="24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- title -->
+            <RowDefinition Height="Auto"/>   <!-- sub-tabs -->
+            <RowDefinition Height="*"/>      <!-- panes -->
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="Settings" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="Crawler behaviour, proxy and detection patterns" Style="{StaticResource PageSubtitle}"/>
+        </StackPanel>
+
+        <!-- Sub-tab bar -->
+        <Border Grid.Row="1" Margin="0,0,0,12" Padding="0,0,0,2"
+                BorderBrush="#14FFFFFF" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="TabCrawler" Content="Crawler" IsChecked="True"
+                             Style="{StaticResource TabBtn}" Checked="SubTab_Checked" Tag="Crawler"/>
+                <RadioButton x:Name="TabProxy" Content="Proxy"
+                             Style="{StaticResource TabBtn}" Margin="4,0,0,0"
+                             Checked="SubTab_Checked" Tag="Proxy"/>
+                <RadioButton x:Name="TabPerf" Content="Performance"
+                             Style="{StaticResource TabBtn}" Margin="4,0,0,0"
+                             Checked="SubTab_Checked" Tag="Perf"/>
+                <RadioButton x:Name="TabPatterns" Content="Regex Patterns"
+                             Style="{StaticResource TabBtn}" Margin="4,0,0,0"
+                             Checked="SubTab_Checked" Tag="Patterns"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Panes share one cell; the active one slides in -->
+        <Grid Grid.Row="2">
+            <!-- ── Crawler settings ─────────────────────────────────── -->
+            <Border x:Name="PaneCrawler" Style="{StaticResource Card}" Padding="24"
+                    MaxWidth="680" HorizontalAlignment="Left">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,0,6,0">
+                        <TextBlock Text="OUTPUT" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
+                        <Grid Margin="0,0,0,22">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" x:Name="TxtOutput"
+                                     Style="{StaticResource DarkTextBox}" Height="36"
+                                     Text="grabbed\" Margin="0,0,8,0"/>
+                            <Button Grid.Column="1" Content="Browse…"
+                                    Style="{StaticResource BtnGhost}" Height="36" Padding="14,0"
+                                    Click="BtnBrowseOutput_Click"/>
+                        </Grid>
+
+                        <TextBlock Text="CRAWL OPTIONS" Style="{StaticResource CardTitle}" Margin="0,0,0,10"/>
+                        <CheckBox x:Name="ChkSitemap" Style="{StaticResource DarkCheck}"
+                                  Content="Parse sitemap.xml" IsChecked="True" Margin="0,0,0,8"/>
+                        <CheckBox x:Name="ChkPagination" Style="{StaticResource DarkCheck}"
+                                  Content="Auto-expand pagination" IsChecked="True" Margin="0,0,0,8"/>
+                        <CheckBox x:Name="ChkForms" Style="{StaticResource DarkCheck}"
+                                  Content="Capture form endpoints" IsChecked="True" Margin="0,0,0,8"/>
+                        <CheckBox x:Name="ChkCss" Style="{StaticResource DarkCheck}"
+                                  Content="CSS second-pass sweep" IsChecked="True" Margin="0,0,0,8"/>
+                        <CheckBox x:Name="ChkExternal" Style="{StaticResource DarkCheck}"
+                                  Content="Follow external links" Margin="0,0,0,22"/>
+
+                        <TextBlock Text="USER AGENT" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
+                        <ComboBox x:Name="CmbUA" Style="{StaticResource DarkComboBox}" Margin="0,0,0,22">
+                            <ComboBoxItem Content="SiteGrabber/3.0" IsSelected="True"/>
+                            <ComboBoxItem Content="Mozilla/5.0 (Chrome)"/>
+                            <ComboBoxItem Content="Googlebot/2.1"/>
+                            <ComboBoxItem Content="Custom…"/>
+                        </ComboBox>
+
+                        <Grid Margin="0,0,0,8">
+                            <TextBlock Text="DELAY BETWEEN REQUESTS" Style="{StaticResource CardTitle}"/>
+                            <TextBlock Text="{Binding Value, ElementName=SliderDelay, StringFormat={}{0:F0} ms}"
+                                       FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{StaticResource BrAccent}"
+                                       HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Slider x:Name="SliderDelay" Style="{StaticResource DarkSlider}"
+                                Minimum="0" Maximum="2000" Value="100"
+                                TickFrequency="100" IsSnapToTickEnabled="True"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- ── Proxy settings ──────────────────────────────────── -->
+            <Border x:Name="PaneProxy" Style="{StaticResource Card}" Padding="24"
+                    MaxWidth="560" HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Visibility="Collapsed">
+                <StackPanel>
+                    <CheckBox x:Name="ChkProxy" Style="{StaticResource DarkCheck}"
+                              Content="Enable proxy" Margin="0,0,0,18"/>
+                    <TextBlock Text="PROXY HOST" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource DarkTextBox}" Height="36" Margin="0,0,0,16"
+                             Text="127.0.0.1"/>
+                    <TextBlock Text="PORT" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource DarkTextBox}" Height="36" Margin="0,0,0,18"
+                             Text="8080" Width="120" HorizontalAlignment="Left"/>
+                    <CheckBox Style="{StaticResource DarkCheck}"
+                              Content="Intercept traffic (route through proxy)"
+                              Margin="0,0,0,10"/>
+                    <CheckBox Style="{StaticResource DarkCheck}"
+                              Content="Ignore SSL errors" Margin="0,0,0,18"/>
+                    <TextBlock Text="Burp Suite / OWASP ZAP compatible" FontSize="11"
+                               Foreground="{StaticResource BrMuted}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Performance settings ────────────────────────────── -->
+            <Border x:Name="PanePerf" Style="{StaticResource Card}" Padding="24"
+                    MaxWidth="560" HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Visibility="Collapsed">
+                <StackPanel>
+                    <Grid Margin="0,0,0,8">
+                        <TextBlock Text="THREADS" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="{Binding Value, ElementName=SliderThreads, StringFormat={}{0:F0}}"
+                                   FontSize="12" FontWeight="SemiBold"
+                                   Foreground="{StaticResource BrAccent}" HorizontalAlignment="Right"/>
+                    </Grid>
+                    <Slider x:Name="SliderThreads" Style="{StaticResource DarkSlider}"
+                            Minimum="1" Maximum="64" Value="16"
+                            TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,0,0,20"/>
+
+                    <Grid Margin="0,0,0,8">
+                        <TextBlock Text="TIMEOUT" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="{Binding Value, ElementName=SliderTimeout, StringFormat={}{0:F0} s}"
+                                   FontSize="12" FontWeight="SemiBold"
+                                   Foreground="{StaticResource BrAccent}" HorizontalAlignment="Right"/>
+                    </Grid>
+                    <Slider x:Name="SliderTimeout" Style="{StaticResource DarkSlider}"
+                            Minimum="5" Maximum="120" Value="30"
+                            TickFrequency="5" IsSnapToTickEnabled="True" Margin="0,0,0,20"/>
+
+                    <Grid Margin="0,0,0,8">
+                        <TextBlock Text="MAX FILE SIZE" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="{Binding Value, ElementName=SliderMaxSize, StringFormat={}{0:F0} MB}"
+                                   FontSize="12" FontWeight="SemiBold"
+                                   Foreground="{StaticResource BrAccent}" HorizontalAlignment="Right"/>
+                    </Grid>
+                    <Slider x:Name="SliderMaxSize" Style="{StaticResource DarkSlider}"
+                            Minimum="1" Maximum="500" Value="50"
+                            TickFrequency="10" IsSnapToTickEnabled="True" Margin="0,0,0,22"/>
+
+                    <CheckBox Style="{StaticResource DarkCheck}"
+                              Content="Rate limit detection (auto-back-off)"
+                              IsChecked="True" Margin="0,0,0,10"/>
+                    <CheckBox Style="{StaticResource DarkCheck}"
+                              Content="Retry on 5xx (max 3 retries)"
+                              IsChecked="True"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Regex patterns ──────────────────────────────────── -->
+            <Border x:Name="PanePatterns" Style="{StaticResource Card}" Padding="24"
+                    Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Custom patterns run against every crawled response."
+                               FontSize="12" Foreground="{StaticResource BrMuted}" Margin="0,0,0,12"/>
+                    <TextBox Grid.Row="1" x:Name="TxtPatterns"
+                             Style="{StaticResource DarkTextBox}"
+                             FontFamily="Consolas" FontSize="11"
+                             AcceptsReturn="True"
+                             TextWrapping="NoWrap"
+                             VerticalContentAlignment="Top"
+                             VerticalScrollBarVisibility="Auto"
+                             Text="# one pattern per line&#x0D;&#x0A;# secret key: (?i)secret[_\-]?key\s*=\s*['\&quot;]?([A-Za-z0-9+/]{20,})&#x0D;&#x0A;"/>
+                    <Button Grid.Row="2" Content="Save Patterns"
+                            Style="{StaticResource BtnAccent}"
+                            HorizontalAlignment="Left"
+                            Height="36" Padding="20,0" FontSize="13" Margin="0,14,0,0"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
