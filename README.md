@@ -1,4 +1,4 @@
-# SiteGrabber
+# SiteGrab
 
 **Full-site mirror + exposed-data hunter + recon suite.**
 
