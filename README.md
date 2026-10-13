@@ -2,7 +2,7 @@
 
 Mirrors websites to disk. Follows links, parses sitemaps, handles search/product/pricing pages. Three implementations — C++ console tool, C# WinForms GUI, Python script.
 
-Newest Version v4.0.0 is now available
+Newest Version v3.0.0 is now available
 ---
 
 ## C++ (Windows, no dependencies)
