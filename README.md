@@ -16,8 +16,8 @@ Single-file exe. Self-contained. No .NET runtime install required. Windows 10/11
 
 Older versions:
 
-- **v3** — WinForms tabbed UI + C++ + Python engines → [`sitegrab/`](sitegrab/)
-- **v4 source** — the WPF project → [`sitegrabber-v4/`](sitegrabber-v4/)
+- **old one** — WinForms tabbed UI + C++ + Python engines → [`sitegrab/`](sitegrab/)
+- **v3 source** — the WPF project → [`sitegrabber-v4/`](sitegrabber-v4/)
 
 ---
 
