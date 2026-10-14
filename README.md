@@ -10,7 +10,7 @@ every request it made — from one Windows app.
 ## Download
 
 **SiteGrabber v3** (WPF dashboard, the current release) —
-[⬇ Download for Windows](https://github.com/aix567/sitegrab/releases/latest)
+[Download for Windows](https://github.com/aix567/sitegrab/releases/latest)
 
 Single-file exe. Self-contained. No .NET runtime install required. Windows 10/11 x64.
 
@@ -114,7 +114,7 @@ picks up where it left off.
 
 ## Video Demo for the Software v3.0.0
 
-https://drive.google.com/file/d/1xTUM0qdtHqRuOjS1vssY-BxhNzplRssS/view?usp=drive_link
+https://drive.google.com/file/d/1jAeOC1-O9XkSs8Q8wk_2J4zeaQdc5FxP/view?usp=sharing
 
 <img width="1912" height="1047" alt="1" src="https://github.com/user-attachments/assets/c3747623-0a6a-4a00-bf8f-8dbddab03e1d" />
 
